@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oracle.oBootS20220603.ProductMapper">
+	
+	<select id="HKSelectBestProduct" resultType="Product">
+		select *
+		from (select rownum rn, a.*
+		      from (select p.*, e.dc_rate, (p.prod_price * ((100-e.dc_rate)/100)) sale_price
+		            from product p, evt_product ep, event e
+		            where p.prodno = ep.prodno(+) and ep.evt_no = e.evt_no(+)
+		            order by sale_qty desc) a)
+		where rn between 1 and 4
+	</select>
+	
+	<select id="HKSelectOne" parameterType="int" resultType="Product">
+		select p.*, nvl(e.dc_rate,0), (p.prod_price - p.prod_price * (nvl(e.dc_rate,0)/100)) sale_price
+        from product p, evt_product ep, event e
+        where p.prodno = ep.prodno(+) and ep.evt_no = e.evt_no(+)
+        and p.prodno=#{prodno}
+	</select>
+	
+	<select id="HKSelectBasketProduct" resultType="Product" parameterType="hashMap">
+		select p.*, nvl(e.dc_rate,0), (p.prod_price - p.prod_price * (nvl(e.dc_rate,0)/100)) sale_price, b.bas_qty
+		from product p, evt_product ep, event e, basket b
+		where p.prodno = ep.prodno(+) and ep.evt_no = e.evt_no(+) and p.prodno = b.prodno
+		and b.id = #{id}
+		and b.prodno in
+		<foreach item="item" index="index" collection="basket_list"
+		    open="(" separator="," close=")">
+		      #{item.prodno}
+		</foreach>
+	</select>
+	
+	<update id="HKIncreaseSaleQty" parameterType="PaymentDetail">
+		update product set sale_qty = sale_qty + #{buy_qty} where prodno = #{prodno}
+	</update>
+	
+</mapper>

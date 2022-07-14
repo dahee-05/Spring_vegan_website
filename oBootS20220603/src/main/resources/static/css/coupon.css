@@ -1,0 +1,45 @@
+@charset "UTF-8";
+
+#coupon_box {
+	width:100%;
+	margin-top:50px;
+}
+
+#coupon_box li{
+	width:300px;
+	margin-left:20px;
+	float:left;
+	margin-bottom:30px;
+	list-style-type:none;
+	height:140px;
+	border: 2px solid #efefef;
+    padding: 15px 25px 15px 25px;
+    border-radius: 10px;
+}
+#coupon_box li:nth-child(3n+1){margin-left:0}
+
+#no_data {
+	width:100%;
+	margin-top:100px;
+	text-align:center;
+	font-size:18px;
+}
+
+#coupon_box li h4 {
+	font-size: 18px;
+    color: red;
+    margin-bottom: 15px;
+}
+
+#coupon_box li h5 {
+	color: black;
+    font-size: 15px;
+    margin-bottom: 20px;
+}
+
+#coupon_box li p {
+	font-size: 13px;
+    color: #8C8C8C;
+    margin-top: 5px;
+}
+

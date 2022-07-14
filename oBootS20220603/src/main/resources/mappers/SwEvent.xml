@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oracle.oBootS20220603.SwEventMapper">
+	
+	<select id="swEventTotal" resultType="int">
+		SELECT Count(*) FROM event
+	</select>
+	
+	<select id="aSwEventListAll" parameterType="Event" resultType="Event">
+	 <![CDATA[
+		SELECT *
+		FROM (
+		        SELECT rownum rn ,  a.*
+		        FROM  (select * from event order by evt_no) a
+		     )
+		WHERE rn >= #{start} 
+		AND   rn <= #{end}
+	 ]]>
+	
+	</select>
+	
+	<select id="aSwEventSelOnep" parameterType="int" resultType="Event">
+		select *
+		from event e
+		where e.evt_no=#{evt_no}
+	</select>
+	
+	<select id="aSwp_list" parameterType="Product" resultType="Product">
+		select p.prodno, p.prod_name, p.brand_name
+		from event e, evt_product ep, product p
+		where e.evt_no=ep.evt_no and e.evt_no=#{evt_no} and ep.prodno=p.prodno
+	</select>
+	
+	<select id="aSwEventSelOnec" parameterType="int" resultType="Event">
+		select *
+		from event e
+		where e.evt_no=#{evt_no}
+	</select>
+	
+	<select id="aSwc_list" parameterType="CouponMaster" resultType="CouponMaster">
+		select *
+		from event e, evt_coupon ec, couponmaster cm
+		where e.evt_no=ec.evt_no and e.evt_no=#{evt_no} and ec.coupno=cm.coupno
+	</select>
+	
+	<delete id="aSwEventdelete" parameterType="int">
+		delete from event where evt_no=#{evt_no}
+	</delete>
+	
+	
+	
+	
+	
+	
+	
+	<select id="uSwEventListAll" parameterType="Event" resultType="Event">
+		select *
+		from event
+		where evt_sts=1
+	</select>
+	
+	<select id="uSwEvtdetailp" parameterType="int" resultType="Event">
+		select *
+		from event e
+		where e.evt_no=#{evt_no}
+	</select>
+	
+	<select id="uSwEvtdetailc" parameterType="int" resultType="Event">
+		select *
+		from event e
+		where e.evt_no=#{evt_no}
+	</select>
+	
+	<select id="uSwp_list" parameterType="Product" resultType="Product">
+		select p.prodno, p.prod_name, p.brand_name, p.prod_price, p.th_img, e.dc_rate, (p.prod_price * (100-e.dc_rate)/100) sale_price
+		from event e, evt_product ep, product p
+		where e.evt_no=ep.evt_no and e.evt_no=#{evt_no} and ep.prodno=p.prodno
+	</select>
+	
+	<select id="uSwc_list" parameterType="CouponMaster" resultType="CouponMaster">
+		select cm.*
+		from event e, evt_coupon ec, couponmaster cm
+		where e.evt_no=ec.evt_no and e.evt_no=#{evt_no} and cm.coupno=ec.coupno
+	</select>
+	
+	<select id="aSwp_list1" parameterType="Event" resultType="Event">
+		select prodno, prod_name, brand_name
+		from product
+	</select>
+	
+	
+	<select id="aSwEventwritepp" parameterType="Event" resultType="Event">
+		select * from event where evt_name =#{evt_name}
+	</select>
+	
+	
+	<insert id="aSwEvtwritep" parameterType="Event">
+		insert into evt_product( evt_no,
+								 prodno)
+						values( #{evt_no},
+								#{prodno})
+	</insert>
+	
+	
+	<insert id="aSwEventwritep" parameterType="Event">
+		insert into event(evt_no
+						,evt_name
+						,dc_rate
+						,evt_start
+						,evt_end
+						,evt_regdate
+						,evt_exp
+						,evt_notice
+						,evt_img
+						,evt_sts
+						,evt_type)
+					values(evt_no_SEQ.NEXTVAL
+						,#{evt_name}
+						,#{dc_rate}
+						,#{evt_start}
+						,#{evt_end}
+						,sysdate
+						,#{evt_exp}
+						,#{evt_notice}
+						,#{evt_img}
+						,1
+						,1)
+	</insert>
+	
+	<insert id="couponInsert" parameterType="Coupon">
+		insert into coupon(coupno
+						,id
+						,coup_start
+						,coup_end
+						,coup_status)
+					values(#{coupno}
+						,#{id}
+						,sysdate
+						,sysdate + (SELECT cm.coup_expdate FROM couponmaster cm where cm.coupno=#{coupno})
+						,1
+						)
+	</insert>
+	
+	
+	<select id="aSwc_list1" parameterType="Event" resultType="Event">
+		select coupno, coup_name, coup_dc_price, coup_dc_rate
+		from couponmaster
+	</select>
+	
+	<insert id="aSwEventwritec" parameterType="Event">
+		insert into event(evt_no
+						,evt_name
+						,dc_rate
+						,evt_start
+						,evt_end
+						,evt_regdate
+						,evt_exp
+						,evt_notice
+						,evt_img
+						,evt_sts
+						,evt_type)
+					values(evt_no_SEQ.NEXTVAL
+						,#{evt_name}
+						,0
+						,#{evt_start}
+						,#{evt_end}
+						,sysdate
+						,#{evt_exp}
+						,#{evt_notice}
+						,#{evt_img}
+						,1
+						,2)
+	</insert>
+	
+	<select id="aSwEventwritecc" parameterType="Event" resultType="Event">
+		select * from event where evt_name =#{evt_name}
+	</select>
+	
+	<insert id="aSwEvtwritec" parameterType="Event">
+		insert into evt_coupon( evt_no,
+								coupno)
+						values( #{evt_no},
+								#{coupno})
+	</insert>
+
+</mapper>

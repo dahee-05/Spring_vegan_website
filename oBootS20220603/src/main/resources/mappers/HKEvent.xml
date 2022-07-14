@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oracle.oBootS20220603.EventMapper">
+	
+	<select id="HKActiveEvtSelect" resultType="Event">
+		select * from event where evt_sts=1
+	</select>
+	
+	<select id="HKGetEvtType" parameterType="int" resultType="int">
+		select evt_type from event where evt_no=#{evt_no}
+	</select>
+	
+</mapper>

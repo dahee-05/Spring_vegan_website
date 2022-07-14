@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oracle.oBootS20220603.PaymentMapper">
+	
+	<insert id="HKInsertPayment" parameterType="Payment">
+		<choose>
+			<when test="coupno == 0">
+				insert into payment(payno, id, org_amount, real_amount, 
+				mile_use, mile_save, delivery_fee, del_post_code, del_address,
+				del_daddress, rec_name, rec_phone)
+				values(payment_seq.nextval, #{id}, #{org_amount}, #{real_amount},
+				#{mile_use}, #{mile_save}, #{delivery_fee}, #{del_post_code},
+				#{del_address}, #{del_daddress}, #{rec_name}, #{rec_phone})
+			</when>
+			
+			<when test="coupno != 0">
+				insert into payment(payno, id, org_amount, real_amount, 
+				coupno, mile_use, mile_save, delivery_fee, del_post_code, del_address,
+				del_daddress, rec_name, rec_phone)
+				values(payment_seq.nextval, #{id}, #{org_amount}, #{real_amount},
+				#{coupno}, #{mile_use}, #{mile_save}, #{delivery_fee}, #{del_post_code},
+				#{del_address}, #{del_daddress}, #{rec_name}, #{rec_phone})
+			</when>
+		</choose>
+		
+		
+	</insert>
+	
+	<select id="HKselectPaynoById" resultType="int" parameterType="String">
+		select max(payno) from payment where id=#{id} 
+	</select>
+	
+	<select id="HKSelectLastPayment" parameterType="Payment" resultType="Payment">
+		select * from payment where payno=#{payno} and id=#{id}
+	</select>
+	
+	<delete id="HKDeleteFailPayment" parameterType="Payment">
+		delete from payment where id=#{id} and payno=#{payno}
+	</delete>
+	
+	<update id="HKUpdatePaydate" parameterType="Payment">
+		update payment set pay_date=#{pay_date} where payno=#{payno}
+	</update>
+	
+	
+</mapper>

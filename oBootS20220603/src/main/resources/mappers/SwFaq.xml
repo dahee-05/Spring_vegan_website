@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oracle.oBootS20220603.SwFaqMapper">
+	
+	<select id="swFaqTotal" resultType="int">
+		SELECT Count(*) FROM faq
+	</select>
+
+	<select id="aSwFaqListAll" parameterType="Faq" resultType="Faq">
+	 <![CDATA[
+		SELECT *
+		FROM (
+		        SELECT rownum rn ,  a.*
+		        FROM  (select * from faq order by boardno) a
+		     )
+		WHERE rn >= #{start} 
+		AND   rn <= #{end}
+	 ]]>
+	</select>
+	
+	<select id="aSwFaqSelOne" parameterType="int" resultType="Faq">
+		select * From faq Where boardno = #{boardno}
+	</select>
+	
+	<update id="aSwFaqupdate" parameterType="Faq">
+	
+		update faq set 	board_category=#{board_category},
+						board_title=#{board_title},
+					   	board_content=#{board_content}
+		where boardno=#{boardno}
+		
+	</update>
+	
+	<delete id="aSwFaqdelete" parameterType="int">
+		delete from faq where boardno=#{boardno}
+	</delete>
+
+	
+	<insert id="aSwFaqwrite">
+	
+	   INSERT INTO faq(    		boardno 
+	   					      , board_title 
+	   					      , board_content 
+	   					      , board_date
+	   					      ,	board_category )
+	                 VALUES(    boardno_SEQ.NEXTVAL 
+	                 		  , #{board_title}
+	                 		  , #{board_content}
+	                 		  , sysdate
+	                 		  , #{board_category} )
+   
+  	</insert>
+  	
+  	<select id="uSwFaqListAll" parameterType="int" resultType="Faq">
+		select * from faq where board_category =#{board_category}
+	</select>
+	
+	<select id="uSwFaqListAll1" parameterType="int" resultType="Faq">
+		select * From faq Where boardno = #{boardno}
+	</select>
+	
+</mapper>

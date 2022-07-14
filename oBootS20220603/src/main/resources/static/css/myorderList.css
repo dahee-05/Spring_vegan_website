@@ -1,0 +1,86 @@
+@charset "UTF-8";
+
+.thm_img{
+	float: left;
+	padding-bottom: 5px;
+	height: 200px;
+	width: 200px;
+}
+.thm_rimg{
+	height: 100%;
+	width: 100%;
+	object-fit: contain;
+}
+
+.prod_info{
+	float: left;
+}
+.infobox{
+	float: left;
+	width: 940px;
+}
+.status{
+	padding-top: 30px;
+	padding-bottom: 10px;
+	padding-left: 20px;
+	clear: both;
+}
+.stsText{
+	font-weight: bold;
+	font-size: 1.3em;
+	
+}
+.dateText{
+	color:gray;
+	float: right;
+	
+}
+
+.listTitle{
+	font-weight: bold;
+	font-size: 1em;
+}
+
+.listTitle a:hover{
+	color: blue;
+}
+
+.listQty{
+	padding-top: 10px;
+	padding-bottom: 5px;
+}
+
+.listMon {
+	font-weight: bold;
+}
+
+.listTitle button{
+	border: 1px solid #5F8350;
+	background: none;
+	cursor: pointer;
+	color: green;
+	border-radius: 12px;
+    width: 62.4px;
+    height: 27.4px;
+	
+}
+
+.listTitle button:hover{
+	background-color: green;
+	color:white;
+}
+
+.stsText button{
+	border: 1px solid #5F8350;
+	background: none;
+	cursor: pointer;
+	color: green;
+	border-radius: 12px;
+    width: 62.4px;
+    height: 27.4px;
+}
+
+.stsText button:hover{
+	background-color: green;
+	color:white;
+}

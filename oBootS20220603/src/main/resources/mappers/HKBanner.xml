@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oracle.oBootS20220603.BannerMapper">
+	
+	<select id="HKBannerSelectAll" resultType="Banner">
+		select * from banner order by evt_no asc
+	</select>
+	
+	<delete id="HKDeleteBanner" parameterType="int">
+		delete banner where evt_no=#{evt_no}
+	</delete>
+	
+	<update id="HKUpdateBannerImg" parameterType="Banner">
+		update banner set banner_img=#{new_banner_img} where evt_no=#{evt_no}
+	</update>
+	
+	<update id="HKUpdateBannerEvtno" parameterType="Banner">
+		update banner set evt_no=#{new_evt_no} where evt_no=#{evt_no}
+	</update>
+	
+	<update id="HKUpdateBanner" parameterType="Banner">
+		update banner set evt_no=#{new_evt_no}, banner_img=#{new_banner_img} where evt_no=#{evt_no}
+	</update>
+	
+	<insert id="HKInsertBanner" parameterType="Banner">
+		insert into banner values(#{new_evt_no}, #{new_banner_img})
+	</insert>
+	
+</mapper>

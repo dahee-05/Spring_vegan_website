@@ -1,0 +1,54 @@
+@charset "UTF-8";
+
+/* 이벤트 탭 css */
+
+
+
+/* 탭 스타일 */
+.tab_item {
+  width: calc(100%/2);
+  height: 50px;
+  border-bottom: 2px solid #dddddd;
+  background-color: #f8f8f8;
+  line-height: 50px;
+  font-size: 16px;
+  text-align: center;
+  color: #5F8350;
+  display: block;
+  float: left;
+  text-align: center;
+  font-weight: bold;
+  transition: tab01 0.2s ease;
+}
+.tab_item:hover {
+  opacity: 0.75;
+}
+
+/* 라디오 버튼 UI삭제*/
+input[name="tab_item"] {
+  display: none;
+}
+
+/* 탭 컨텐츠 스타일 */
+.tab_content {
+  display: none;
+  padding: 40px 40px 0;
+  clear: both;
+  overflow: hidden;
+}
+
+/* 선택 된 탭 콘텐츠를 표시 */
+#tab01:checked ~ #tab01_content,
+#tab02:checked ~ #tab02_content,
+#tab03:checked ~ #tab03_content {
+  display: block;
+}
+
+/* 선택된 탭 스타일 */
+.tabs input:checked + .tab_item {
+  	border-bottom: 2px solid #5F8350;
+	font-weight: bold;
+	color: #5F8350;
+	background-color: #F1F4EF;
+}    
+</style>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oracle.oBootS20220603.MemberMapper">
+
+	<select id="HKMemberSelectOne" resultType="Member">
+		select * from member where id=#{id}
+	</select>
+
+	<update id="HKUpdateMileage" parameterType="Payment">
+		update member set mileage = mileage + #{mile_save} - #{mile_use} where id = #{id}
+	</update>
+	
+	<update id="HKUpdateAddress" parameterType="Payment">
+		update member set post_code = #{del_post_code}, address = #{del_address}, det_address = #{del_daddress} where id=#{id}
+	</update>
+	
+	<select id="HKPwCheck" parameterType="Member" resultType="int">
+		select count(*) from member where id=#{id} and pw=#{pw}
+	</select>
+	
+	<update id="HKChangePw" parameterType="Member">
+		update member set pw=#{new_pw} where id=#{id}
+	</update>
+	
+</mapper>

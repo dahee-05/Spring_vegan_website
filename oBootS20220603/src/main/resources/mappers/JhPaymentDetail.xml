@@ -1,0 +1,692 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.oracle.oBootS20220603.JhPaymentDetailMapper">
+  	
+  	<!-- 어드민 대시보드 시작 -->
+  	<!-- 1  오늘의 매출 현황 (금액의 총합) -->
+  	<select id="jhPaymentSelMoneyTodayA" resultType="Integer">
+        SELECT sum(real_amount)
+        FROM payment
+        WHERE to_char(pay_date,'YYYYMMDD')=to_char(sysdate,'YYYYMMDD')
+        AND pay_date IS NOT NULL
+  	</select>
+  	
+  	<!-- 2  오늘의 주문 완료 (개수) _결제일 -->
+  	<select id="jhPaymentSelTodayTotA" resultType="int">
+        SELECT count(*)
+        FROM payment
+        WHERE to_char(pay_date,'YYYYMMDD')=to_char(sysdate,'YYYYMMDD')
+        AND pay_date IS NOT NULL
+  	</select>
+  	
+  	<!-- 3  오늘의 취소 개수 _취소일 -->
+  	<select id="jhPaymentCanTodayTotA" resultType="int">
+        SELECT count(*)
+        FROM payment
+        WHERE to_char(cancel_date,'YYYYMMDD')=to_char(sysdate,'YYYYMMDD')
+        AND pay_date IS NOT NULL
+  	</select>  	
+  	
+  	<!-- 4  오늘의 환불 개수 _환불요청일 -->
+  	<select id="jhPaymentRefTodayTotA" resultType="int">
+        SELECT count(*)
+        FROM payment
+        WHERE to_char(refund_sdate,'YYYYMMDD')=to_char(sysdate,'YYYYMMDD')
+        AND pay_date IS NOT NULL
+  	</select>
+  	
+  	
+  	<!-- 5  오늘의 신규 구독회원 _구독시작일 -->
+  	<select id="jhMemberTodayTotA" resultType="int">
+        SELECT count(*)
+        FROM member
+        WHERE to_char(sub_start,'YYYYMMDD')=to_char(sysdate,'YYYYMMDD')
+  	</select>  	
+  	
+  	
+  	<!-- 6 오늘의 신규 리뷰 _리뷰등록일 -->
+   	<select id="jhReviewTodayTotA" resultType="int">
+        SELECT count(*)
+        FROM review
+        WHERE to_char(rv_date,'YYYYMMDD')=to_char(sysdate,'YYYYMMDD')
+  	</select>  	 	  	
+  	
+  	
+  	
+  	<!-- 어드민 배송처리 시작 -->
+  	<!-- 관리자 판매목록 검색 총합  -->
+  	<select id="jhPaymentPayedlistTotA" resultType="int">
+  		SELECT count(*)	FROM payment WHERE pay_sts=1 AND pay_date IS NOT NULL
+  	</select>
+  
+  	<!-- 관리자 판매목록 리스트  -->
+  	<select id="jhPaymentPayedlistA" parameterType="Payment" resultType="Payment">
+  		SELECT *
+		FROM (
+		    SELECT rownum rn, a.*
+		    FROM (
+		            SELECT pm.*, pd.buy_qty, m.name, p.prod_name
+		            FROM payment_detail pd, payment pm, member m, product p
+		            WHERE pd.payno=pm.payno AND pm.payno IN  (SELECT payno
+		                                                      FROM payment
+		                                                      WHERE pay_sts=1 AND pay_date IS NOT NULL
+		                                                      )
+                    AND m.id=pm.id
+		            AND p.prodno=pd.prodno                                        
+		            ORDER BY pm.payno
+		            ) 
+		            a
+       			)
+		WHERE rn BETWEEN #{start} AND #{end}
+  	</select>
+  	
+  	<!-- 관리자 판매목록 검색 총 합 -->
+  	<select id="jhPaymentPayedlistKeyTotA" parameterType="Payment" resultType="int">
+  		SELECT count(*)	
+  		FROM member m, payment p 
+  		WHERE m.id=p.id 
+  		<choose>
+  			<when test="search=='s_payno'">
+  				AND p.payno LIKE '%' || #{keyword1} || '%'  
+  			</when>
+  			
+  			<when test="search=='s_name'">
+  				AND m.name LIKE '%' || #{keyword1} || '%'
+  			</when>
+  		</choose>
+				AND pay_sts=1
+				AND p.pay_date BETWEEN #{sdate, jdbcType=VARCHAR} AND #{edate, jdbcType=VARCHAR} 
+				AND pay_date IS NOT NULL
+  	</select>
+  	
+  	<!-- 관리자 판매목록 검색 리스트  -->
+  	<select id="jhPaymentPayedlistKeyA" parameterType="Payment" resultType="Payment">
+  		SELECT *
+		FROM (
+		    SELECT rownum rn, a.*
+		    FROM (
+		            SELECT pm.*, pd.buy_qty, m.name, p.prod_name
+		            FROM payment_detail pd, payment pm, member m, product p
+				            WHERE pd.payno=pm.payno 
+				            AND pm.payno IN  (SELECT payno
+                                              FROM payment
+                                              WHERE pay_sts=1 AND pay_date IS NOT NULL
+                                              <choose>
+									  			<when test="search=='s_payno'">
+									  				AND payno LIKE '%' || #{keyword1} || '%'
+									  			</when>
+								  			  </choose>		     
+                                              )
+                            AND m.id=pm.id
+                          	<choose>
+					  			<when test="search=='s_name'">
+					  				AND m.name LIKE '%' || #{keyword1} || '%'
+					  			</when>
+                          	</choose>			  			
+                            AND p.prodno=pd.prodno
+                            AND pm.pay_date BETWEEN #{sdate, jdbcType=VARCHAR} AND #{edate, jdbcType=VARCHAR}
+				            ORDER BY pm.payno
+				            ) 
+				            a
+		       			)
+		WHERE rn BETWEEN #{start} AND #{end}  	
+  	</select>
+  	
+  	<!-- 관리자 구매완료 운송장 번호 호출 아작스  -->
+  	<select id="jhPaymentDelSeqCallA" parameterType="int" resultType="int">
+		SELECT DELIVERY_SEQ.nextval
+		FROM payment
+		WHERE payno=#{payno} AND pay_date IS NOT NULL
+  	</select>
+  	
+  	<!-- 관리자 구매완료 배송완료 변경 아작스  -->
+  	<select id="jhPaymentUpdDelA" parameterType="Payment">
+  		UPDATE payment
+		SET pay_sts=5, deliveryno=#{deliveryno}, del_date=sysdate
+		WHERE payno=#{payno} AND pay_date IS NOT NULL
+  	</select>
+  	
+  	
+  	
+  	
+  	<!-- 어드민 환불시작 -->
+  	<!-- 관리자 환불목록 총합  -->
+  	<select id="jhPaymentReflistTotA" resultType="int">
+  		SELECT count(*)	
+		FROM payment 
+		WHERE pay_sts=3 OR pay_sts=4 AND pay_date IS NOT NULL
+  	</select>
+  	
+  	<!-- 관리자 환불목록 리스트 조회  -->
+  	<select id="jhPaymentReflistA" parameterType="Payment" resultType="Payment">
+  		SELECT *
+		FROM (
+		    SELECT rownum rn, a.*
+		    FROM (
+		            SELECT pm.*, pd.buy_qty, m.name, p.prod_name
+		            FROM payment_detail pd, payment pm, member m, product p
+		            WHERE pd.payno=pm.payno AND pm.payno IN  (SELECT payno
+		                                                      FROM payment
+		                                                      WHERE pay_sts=3 OR pay_sts=4 AND pay_date IS NOT NULL
+		                                                      )
+                    AND m.id=pm.id
+		            AND p.prodno=pd.prodno                                        
+		            ORDER BY pm.payno desc
+		            ) 
+		            a
+       			)
+		<!-- WHERE rn BETWEEN #{start} AND #{end}  -->
+  	</select>
+  	
+  	
+  	<!-- 관리자 환불목록 검색값 총합  -->
+  	<select id="jhPaymentReflistKeyTotA" parameterType="Payment" resultType="int">
+  		SELECT count(*)	
+  		FROM member m, payment p 
+  		WHERE m.id=p.id
+  		<choose>
+  			<when test="search=='s_payno'">
+  				AND p.payno LIKE '%' || #{keyword1} || '%'  
+  			</when>
+  			
+  			<when test="search=='s_name'">
+  				AND m.name LIKE '%' || #{keyword1} || '%'
+  			</when>
+  		</choose>
+				AND (pay_sts=3 OR pay_sts=4) AND pay_date IS NOT NULL
+  	</select>
+  	
+  	
+  	
+  	<!-- 관리자 환불목록 검색값 조회  -->
+  	<select id="jhPaymentReflistKeyA" parameterType="Payment" resultType="Payment">
+  		SELECT *
+		FROM (
+		    SELECT rownum rn, a.*
+		    FROM (
+		            SELECT pm.*, pd.buy_qty, m.name, p.prod_name
+		            FROM payment_detail pd, payment pm, member m, product p
+				            WHERE pd.payno=pm.payno 
+				            AND pm.payno IN  (SELECT payno
+                                              FROM payment
+                                              WHERE (pay_sts=3 OR pay_sts=4) AND pay_date IS NOT NULL
+                                              <choose>
+									  			<when test="search=='s_payno'">
+									  				AND payno LIKE '%' || #{keyword1} || '%'
+									  			</when>
+								  			  </choose>		     
+                                              )
+                            AND m.id=pm.id
+                          	<choose>
+					  			<when test="search=='s_name'">
+					  				AND m.name LIKE '%' || #{keyword1} || '%'
+					  			</when>
+                          	</choose>			  			
+                            AND p.prodno=pd.prodno
+                            AND pm.pay_date BETWEEN #{sdate, jdbcType=VARCHAR} AND #{edate, jdbcType=VARCHAR}
+				            ORDER BY pm.payno desc
+				            ) 
+				            a
+		       			)
+  		<!--  WHERE pm.payno BETWEEN #{start} AND #{end} -->   
+  	</select>
+  	
+  	<!-- 환불진행중 환불 완료로 변경 아작스 procedure  -->
+  	<select id="jhPaymentRefStsChgA" parameterType="Payment" statementType="CALLABLE">
+  		{
+  			call REFMILEBACK(
+  				#{payno,        	mode=IN,  jdbcType=INTEGER},
+  				#{pay_sts,        	mode=OUT, jdbcType=INTEGER}
+  			)
+  		}
+  	</select>
+  	
+  	
+  	<!-- 어드민 판매목록시작 -->
+  	<!-- 관리자 판매목록  총합   -->
+  	<select id="jhPaymentSellistTotA" resultType="int">
+  		SELECT count(*)	
+		FROM payment 
+		WHERE pay_sts=5 OR pay_sts=6 AND pay_date IS NOT NULL
+  	</select>
+  	
+  	
+  	<!-- 관리자 판매목록 조회  -->
+  	<select id="jhPaymentSellistA" parameterType="Payment" resultType="Payment">
+  		SELECT *
+		FROM (
+		    SELECT rownum rn, a.*
+		    FROM (
+		            SELECT pm.*, pd.buy_qty, m.name, p.prod_name
+		            FROM payment_detail pd, payment pm, member m, product p
+		            WHERE pd.payno=pm.payno AND pm.payno IN  (SELECT payno
+		                                                      FROM payment
+		                                                      WHERE pay_sts=5 OR pay_sts=6 AND pay_date IS NOT NULL
+		                                                      )
+                    AND m.id=pm.id
+		            AND p.prodno=pd.prodno                                        
+		            ORDER BY pm.payno desc
+		            ) 
+		            a
+       			)
+		<!-- WHERE rn BETWEEN #{start} AND #{end}  -->
+  	</select>
+  	
+  	
+  	<!-- 관리자 판매목록 검색값 총합  -->
+  	<select id="jhPaymentSellistKeyTotA" parameterType="Payment" resultType="int">
+  		SELECT count(*)	
+  		FROM member m, payment p 
+  		WHERE m.id=p.id
+  		<choose>
+  			<when test="search=='s_payno'">
+  				AND p.payno LIKE '%' || #{keyword1} || '%'  
+  			</when>
+  			
+  			<when test="search=='s_name'">
+  				AND m.name LIKE '%' || #{keyword1} || '%'
+  			</when>
+  		</choose>
+				AND (pay_sts=5 OR pay_sts=6) AND pay_date IS NOT NULL
+  	</select>
+  	
+  	
+  	<!-- 관리자 판매목록 검색값 조회  -->
+  	<select id="jhPaymentSellistKeyA" parameterType="Payment" resultType="Payment">
+  		SELECT *
+		FROM (
+		    SELECT rownum rn, a.*
+		    FROM (
+		            SELECT pm.*, pd.buy_qty, m.name, p.prod_name
+		            FROM payment_detail pd, payment pm, member m, product p
+				            WHERE pd.payno=pm.payno 
+				            AND pm.payno IN  (SELECT payno
+                                              FROM payment
+                                              WHERE (pay_sts=5 OR pay_sts=6) AND pay_date IS NOT NULL
+                                              <choose>
+									  			<when test="search=='s_payno'">
+									  				AND payno LIKE '%' || #{keyword1} || '%'
+									  			</when>
+								  			  </choose>		     
+                                              )
+                            AND m.id=pm.id
+                          	<choose>
+					  			<when test="search=='s_name'">
+					  				AND m.name LIKE '%' || #{keyword1} || '%'
+					  			</when>
+                          	</choose>			  			
+                            AND p.prodno=pd.prodno
+                            AND pm.pay_date BETWEEN #{sdate, jdbcType=VARCHAR} AND #{edate, jdbcType=VARCHAR}
+				            ORDER BY pm.payno desc
+				            ) 
+				            a
+		       			)
+  		<!--  WHERE pm.payno BETWEEN #{start} AND #{end} -->   
+  	</select>
+  	
+  	
+  	
+  	
+  	<!-- 어드민 취소 목록 시작 -->
+  	<!-- 관리자 취소목록 총합  -->
+  	<select id="jhPaymentCanlistTotA" resultType="int">
+  		SELECT count(*)	
+		FROM payment 
+		WHERE pay_sts=2 AND pay_date IS NOT NULL
+  	</select>
+  	
+  	
+  	<!-- 관리자 취소목록 조회  -->
+  	<select id="jhPaymentCanlistA" parameterType="Payment" resultType="Payment">
+  		SELECT *
+		FROM (
+		    SELECT rownum rn, a.*
+		    FROM (
+		            SELECT pm.*, pd.buy_qty, m.name, p.prod_name
+		            FROM payment_detail pd, payment pm, member m, product p
+		            WHERE pd.payno=pm.payno AND pm.payno IN  (SELECT payno
+		                                                      FROM payment
+		                                                      WHERE pay_sts=2 AND pay_date IS NOT NULL
+		                                                      )
+                    AND m.id=pm.id
+		            AND p.prodno=pd.prodno                                        
+		            ORDER BY pm.payno desc
+		            ) 
+		            a
+       			)
+		<!-- WHERE rn BETWEEN #{start} AND #{end}  -->
+  	</select>
+  	
+  	
+  	
+  	<!-- 관리자 취소목록 검색값 총 개수  -->
+  	<select id="jhPaymentCanlistKeyTotA" parameterType="Payment" resultType="int">
+  		SELECT count(*)	
+  		FROM member m, payment p 
+  		WHERE m.id=p.id
+  		<choose>
+  			<when test="search=='s_payno'">
+  				AND p.payno LIKE '%' || #{keyword1} || '%'  
+  			</when>
+  			
+  			<when test="search=='s_name'">
+  				AND m.name LIKE '%' || #{keyword1} || '%'
+  			</when>
+  		</choose>
+				AND (pay_sts=5 OR pay_sts=6) AND pay_date IS NOT NULL
+				AND p.pay_date BETWEEN #{sdate, jdbcType=VARCHAR} AND #{edate, jdbcType=VARCHAR}		
+  	</select>
+  	
+  	
+  	<!-- 관리자 취소목록 검색값 조회  -->
+  	<select id="jhPaymentCanlistKeyA" parameterType="Payment" resultType="Payment">
+  		SELECT *
+		FROM (
+		    SELECT rownum rn, a.*
+		    FROM (
+		            SELECT pm.*, pd.buy_qty, m.name, p.prod_name
+		            FROM payment_detail pd, payment pm, member m, product p
+				            WHERE pd.payno=pm.payno 
+				            AND pm.payno IN  (SELECT payno
+                                              FROM payment
+                                              WHERE pay_sts=2 AND pay_date IS NOT NULL
+                                              <choose>
+									  			<when test="search=='s_payno'">
+									  				AND payno LIKE '%' || #{keyword1} || '%'
+									  			</when>
+								  			  </choose>		     
+                                              )
+                            AND m.id=pm.id
+                          	<choose>
+					  			<when test="search=='s_name'">
+					  				AND m.name LIKE '%' || #{keyword1} || '%'
+					  			</when>
+                          	</choose>	
+                          	AND pm.pay_date BETWEEN #{sdate, jdbcType=VARCHAR} AND #{edate, jdbcType=VARCHAR}		
+                            AND p.prodno=pd.prodno
+				            ORDER BY pm.payno desc
+		            ) 
+		            a
+       			)
+  		<!--  WHERE pm.payno BETWEEN #{start} AND #{end} -->   
+  	</select>
+  	
+  	
+  	<!-- 어드민 끝 -->
+  	
+  	
+  	
+  	
+  	
+  	
+  	
+  	
+  	
+  	
+  	
+  	
+  	<!-- 사용자 시작 -->
+  	<!--  [회원인지] 결과 값은 있다면 1 , 없으면 0 마이페이지 클릭 시 인터셉트 (아이디 존재 여부 확인) -->
+	<select id="jhPaymentInterceptorU" parameterType="java.lang.String" resultType="int">
+		SELECT count(*) FROM member WHERE id=#{id}
+	</select>
+  	
+  	
+	<!-- [현재날짜>구독날짜] [그 후에 구독상태 추출] 마이페이지 회원 구독여부 변경 후 구독상태 추출(만료날짜와 현재날짜비교 후) 검증  -->
+	<select id="jhMemberSubStsU" parameterType="Member" statementType="CALLABLE">
+  		{
+  			call UCHSUBEXP(
+				#{id,	mode=IN,  jdbcType=VARCHAR},
+  				#{subs, mode=OUT, jdbcType=INTEGER}
+  			)
+  		}
+	</select>
+  		
+  	
+  	<!-- [마이페이지 메뉴에 이름 담기 위함] 마이페이지 회원 이름 표시  -->
+  	<select id="jhMemberFindNameU" parameterType="java.lang.String" resultType="java.lang.String">
+	  	SELECT name
+		FROM member
+		WHERE id=#{id}
+  	</select>
+  	
+  	
+  	<!-- 마이페이지 구매내역 리스트  -->
+	<select id="jhPaymentOrderListU" parameterType="java.lang.String" resultType="Payment">
+		SELECT pm.*, pd.buy_qty, pd.rv_status, pd.dc_rate, p.prod_name, p.brand_name, pd.prodno, p.th_img, p.prod_price
+		FROM payment pm, product p, payment_detail pd
+		WHERE pm.id= #{id} AND pd.payno=pm.payno AND pd.prodno=p.prodno AND pm.pay_date IS NOT NULL
+		ORDER BY pm.payno DESC
+	</select>
+	
+	<!-- 마이페이지 구매내역 리스트 상세보기 (공통정보) -->
+	<select id="jhPaymentOrderCommonDetailU" parameterType="int" resultType="Payment" >
+		SELECT *
+		FROM payment
+		WHERE payno= #{payno} AND pay_date IS NOT NULL
+	</select>
+	
+	<!-- 마이페이지 구매내역 리스트 상세보기 (쿠폰 할인율 count를 검증 ) -->
+	<select id="jhPaymentOrderCommonDetailCouponTotU" parameterType="int" resultType="int" >
+        SELECT count(*)
+        FROM payment p, couponmaster c
+		WHERE p.payno= #{payno} AND p.coupno=c.coupno AND p.pay_date IS NOT NULL
+	</select>
+	
+	<!-- 마이페이지 구매내역 리스트 상세보기 (쿠폰 할인율) -->
+	<select id="jhPaymentOrderCommonDetailCouponU" parameterType="int" resultType="CouponMaster" >
+        SELECT p.payno, p.org_amount, c.coup_dc_rate, c.coup_dc_price
+		FROM payment p, couponmaster c
+		WHERE p.payno= #{payno} AND p.coupno=c.coupno AND p.pay_date IS NOT NULL
+	</select>
+	
+		
+	<!-- 마이페이지 구매내역 리스트 상세보기 -->
+	<select id="jhPaymentOrderDetailU" parameterType="int" resultType="Payment">
+		SELECT pm.*, pd.buy_qty, pd.dc_rate, p.prod_price, p.prod_name, p.brand_name, p.th_img
+		FROM payment pm, product p, payment_detail pd
+		WHERE pm.payno= #{payno} AND pd.payno=pm.payno AND pd.prodno=p.prodno AND pm.pay_date IS NOT NULL
+		ORDER BY pm.payno DESC
+	</select>
+	
+	
+
+
+	<!-- 마이페이지 구매완료 취소완료 상태값 변경 procedure  -->
+  	<select id="jhPaymentChSelCanU" parameterType="Payment" statementType="CALLABLE">
+  		{
+  			call UCHSELCAN(
+  				#{payno,        	mode=IN,  jdbcType=INTEGER},
+  				#{pay_sts,        	mode=OUT, jdbcType=INTEGER}
+  			)
+  		}
+  	</select>
+  	
+	<!-- 마이페이지 구매완료 구매 확정 상태값 변경 procedure  -->
+  	<select id="jhPaymentChSelFixU" parameterType="Payment" statementType="CALLABLE">
+  		{
+  			call UCHDELSELFIX(
+  				#{payno,        	mode=IN,  jdbcType=INTEGER},
+  				#{pay_sts,        	mode=OUT, jdbcType=INTEGER}
+  			)
+  		}
+  	</select>
+  	
+  	
+	<!-- 마이페이지 배송완료 구매 확정 상태값 변경 procedure  -->
+  	<select id="jhPaymentChDelFixU" parameterType="Payment" statementType="CALLABLE">
+  		{
+  			call UCHDELSELFIX(
+  				#{payno,        	mode=IN,  jdbcType=INTEGER},
+  				#{pay_sts,        	mode=OUT, jdbcType=INTEGER}
+  			)
+  		}
+  	</select>
+  	
+  	
+  	<!-- 마이페이지 배송완료 환불신청 상태값, 계좌번호입력, 사유, 일자 변경 -->
+  	<select id="jhPaymentDelRefInfoU" parameterType="Payment">
+  		UPDATE payment
+		SET refund_sdate=sysdate, refund_reason=#{refund_reason}, refund_account=#{refund_account}, pay_sts=3
+		WHERE payno=#{payno} AND pay_date IS NOT NULL
+  	</select>
+  	
+	
+	
+	<!-- 마이페이지 메인화면 -->
+	<!-- 1. 결제완료 -->
+	<select id="jhPaymentSelCountU" parameterType="java.lang.String" resultType="int">
+        SELECT count(*)	
+        FROM payment 
+        WHERE pay_sts=1 AND id=#{id} AND pay_date IS NOT NULL
+	</select>
+	
+	<!-- 2. 취소완료 -->
+	<select id="jhPaymentCanCountU" parameterType="java.lang.String" resultType="int">
+        SELECT count(*)	
+        FROM payment 
+        WHERE pay_sts=2 AND id=#{id} AND pay_date IS NOT NULL	
+	</select>
+	
+	
+	<!-- 3. 환불진행중 -->
+	<select id="jhPaymentRefingCountU" parameterType="java.lang.String" resultType="int">
+        SELECT count(*)	
+        FROM payment 
+        WHERE pay_sts=3 AND id=#{id} AND pay_date IS NOT NULL		
+	</select>	
+	
+	
+	<!-- 4. 환불완료 -->
+	<select id="jhPaymentRefCountU" parameterType="java.lang.String" resultType="int">
+        SELECT count(*)	
+        FROM payment 
+        WHERE pay_sts=4 AND id=#{id} AND pay_date IS NOT NULL		
+	</select>	
+	
+	
+	<!-- 5. 배송완료 -->
+	<select id="jhPaymentDelCountU" parameterType="java.lang.String" resultType="int">
+        SELECT count(*)	
+        FROM payment 
+        WHERE pay_sts=5 AND id=#{id} AND pay_date IS NOT NULL		
+	</select>	
+	
+	
+	<!-- 6. 구매확정 -->
+	<select id="jhPaymentSelFixCountU" parameterType="java.lang.String" resultType="int">
+        SELECT count(*)	
+        FROM payment 
+        WHERE pay_sts=6 AND id=#{id} AND pay_date IS NOT NULL		
+	</select>	
+	
+	
+	<!-- 사용자 쿠폰 테이블 쿠폰 개수 -->
+	<select id="jhCouponCountU" parameterType="java.lang.String" resultType="int">
+       	SELECT count(*)	
+        FROM coupon 
+        WHERE id=#{id}
+	</select>	
+	
+	
+	<!-- 회원 테이블 마일리지 -->  
+	<select id="jhMemberMileCountU" parameterType="java.lang.String" resultType="int">
+        SELECT mileage
+        FROM member 
+        WHERE id=#{id}
+	</select>	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- 로그인 -->
+	<!-- 로그인 아이디 비번 검증 -->
+	<select id="jhMemberLoginCheckU" parameterType="Member" resultType="int">
+		SELECT count(*)
+		FROM member
+		WHERE id=#{id} AND pw=#{pw}
+	</select>
+	
+	
+	<!--  1-4 로그인 비밀번호 찾기 아이디 체크 (결과값 0, 1)  -->
+	<select id="jhMemberFindPwIdCheckU" parameterType="java.lang.String" resultType="int">
+		SELECT count(*)
+		FROM member
+		WHERE id=#{id}
+	</select>
+	
+	<!-- 1-5-1 [아작스] 로그인 비밀번호 찾기 이메일 발송  -->
+	<select id="jhMemberFindPwEmailGetU" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT email
+		FROM member
+		WHERE id=#{id}
+	</select>
+	
+	<!-- 1-5-2 [아작스] 로그인 비밀번호 찾기 이메일 발송 (임시비밀번호로 변경) -->
+	<select id="jhMemberFindPwChgToTempPwU" parameterType="Member" resultType="int">
+		UPDATE member
+		SET pw=#{pw}
+		WHERE id=#{id}
+	</select>
+	
+	
+	
+	
+	
+	
+	<!-- 회원가입 -->
+	<!-- 회원가입 성공 후 db insert -->
+	<select id="jhMemberJoinInsertU" parameterType="Member" resultType="int">
+		INSERT INTO MEMBER(id, pw, name, birth, email, tel, status, reg_date, mileage, post_code, address, det_address, subs, bank, account, sub_start, sub_exp)
+		VALUES(#{id}, #{pw}, #{name}, #{birth}, #{email}, #{tel}, 1, sysdate, 0, #{post_code}, #{address}, #{det_address}, 0, null, null, null, null)  
+	</select>
+	
+	
+	<!-- 개인정보조회 -->
+	<select id="userInfoFindMemberU" parameterType="java.lang.String" resultType="Member">
+		SELECT *
+		FROM member
+		WHERE id=#{id}
+	</select>
+	
+	<!-- 개인정보수정 -->
+	<update id="userInfoUpdateMemberU" parameterType="Member">
+		UPDATE member
+		SET email=#{email}, tel=#{tel} 
+			<choose>
+				<when test="post_code==null">
+					,post_code=''
+				</when>
+				<otherwise>
+					,post_code=#{post_code} 
+				</otherwise>
+			</choose>
+	
+			<choose>
+				<when test="address==null">
+					,address=''
+				</when>
+				<otherwise>
+					,address=#{address}
+				</otherwise>
+			</choose>	
+			
+			<choose>
+				<when test="det_address==null">
+					,det_address=''
+				</when>
+				<otherwise>
+					,det_address=#{det_address}
+				</otherwise>
+			</choose>			
+		WHERE id=#{id}
+	</update>
+	
+  </mapper>

@@ -1,0 +1,22 @@
+@charset "UTF-8";
+
+
+#chatBtn {
+	background-color:#3B82F6;
+	border-radius:20px;
+	color:#ffffff;
+	padding:12px;
+	font-size:13px;
+	position:fixed;
+	bottom:50px;
+	right:50px;
+	display:block;
+	
+}
+
+#chatBox {
+	position:fixed;
+	bottom:100px;
+	right:50px;
+	width:350px;
+}

@@ -1,0 +1,40 @@
+@charset "UTF-8";
+
+
+#chatListTable {
+	background-color: #ffffff;
+    border: 1px solid #c0c0c0;
+}
+
+#chatListTable th {
+	font-size: 18px;
+}
+
+#chatListTable td {
+	font-size: 18px;
+}
+
+#chatListTable th:nth-child(1) {
+	width:40%;
+}
+#chatListTable th:nth-child(2) {
+	width:40%;
+	text-align:center;
+}
+#chatListTable th:nth-child(3) {
+	width:20%;
+	text-align:center;
+}
+
+
+#chatListTable tbody tr td:nth-child(1) {
+	width:40%;
+}
+#chatListTable tbody tr td:nth-child(2) {
+	width:40%;
+	text-align:center;
+}
+#chatListTable tbody tr td:nth-child(3) {
+	width:20%;
+	text-align:center;
+}

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config
+3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<settings> 
+	   <setting name="cacheEnabled" value="false" />
+	   <setting name="jdbcTypeForNull" value="NULL" />
+	 </settings>
+	<typeAliases>
+		<typeAlias alias="Product" type="com.oracle.oBootS20220603.model.Product"/>
+		<typeAlias alias="Member" type="com.oracle.oBootS20220603.model.Member"/>
+		<typeAlias alias="Basket" type="com.oracle.oBootS20220603.model.Basket"/>
+		<typeAlias alias="Coupon" type="com.oracle.oBootS20220603.model.Coupon"/>
+		<typeAlias alias="Payment" type="com.oracle.oBootS20220603.model.Payment"/>
+		<typeAlias alias="PaymentDetail" type="com.oracle.oBootS20220603.model.PaymentDetail"/>
+		<typeAlias alias="CouponMaster" type="com.oracle.oBootS20220603.model.CouponMaster"/>
+		<typeAlias alias="Faq"	type="com.oracle.oBootS20220603.model.Faq"/>
+		<typeAlias alias="Wishlist" type="com.oracle.oBootS20220603.model.Wishlist"/>
+		<typeAlias alias="Banner" type="com.oracle.oBootS20220603.model.Banner"/>
+		<typeAlias alias="Event" type="com.oracle.oBootS20220603.model.Event"/>
+		<typeAlias alias="Review" type="com.oracle.oBootS20220603.model.Review"/>
+		<typeAlias alias="Admin" type="com.oracle.oBootS20220603.model.Admin"/>
+	</typeAliases>
+</configuration>

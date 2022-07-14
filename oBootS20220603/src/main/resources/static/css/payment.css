@@ -1,0 +1,170 @@
+@charset "UTF-8";
+
+#main {
+	margin-bottom:50px;
+}
+#main h2 {
+	margin-top:40px;
+	font-size:22px;
+	height:50px;
+	line-height:50px;
+	border-bottom:2px solid black;
+	font-weight:bold;
+	margin-bottom: 30px;
+}
+#left_side {
+	width:60%;
+	float:left;
+}
+#right_side {
+	width:40%;
+	float:right;
+}
+
+#main > div {
+	margin-top:30px;
+}
+
+#left_side > div {
+	width:95%;
+	margin-top:50px;
+}
+
+#left_side > div:nth-child(1) {
+	margin-top:0;
+}
+
+#main h3 {
+	font-size:18px;
+	height:40px;
+	line-height:40px;
+	font-weight:bold;
+}
+
+#p_list{
+	width:100%;
+	margin-top:20px;
+}
+
+#p_list th {
+	font-size:14px;
+}
+
+#p_list th:nth-child(1) {
+	width:20%;
+}
+#p_list th:nth-child(2) {
+	width:50%;
+}
+#p_list th:nth-child(3) {
+	width:15%;
+}
+#p_list th:nth-child(4) {
+	width:15%;
+}
+
+#p_list td {
+	height:120px;
+	line-height:120px;
+}
+
+.p_img img {
+	width:100%;
+	height:120px;
+}
+
+#p_list thead {
+	border-bottom:1px solid black;
+}
+
+#p_list tbody {
+	border-top:0;
+}
+
+#p_list tbody tr:nth-last-child(1) {
+	border-bottom:1px solid black;
+}
+
+
+#order_info input, #delivery_info input {
+	width:100%;
+	height:40px;
+	border-top:none;
+	border-left:none;
+	border-right:none;
+	border-bottom:1px solid black;
+	border-radius:0;
+}
+
+
+#flexCheckChecked {
+	margin-top:20px;
+	padding:8px;
+}
+#checkLabel {
+	margin-top:20px;
+}
+
+.left {
+	float:left;
+}
+
+.right {
+	float:right;
+}
+
+#discount h3 {
+	margin-bottom:30px;
+}
+
+#selectCoupon {
+	font-size:14px;
+	margin-left:10px;
+}
+
+.blue {
+	color:#0066FF;
+}
+
+#mile_use {
+	text-align:right;
+	font-size:1rem;
+	width:120px;
+}
+
+#right_side {
+	padding:20px 15px 25px 15px;
+	border:1px solid #c0c0c0;
+}
+
+#pay h3 {
+	margin-bottom:20px;
+}
+
+#mile_save {
+	float:right;
+	font-size:12px;
+}
+
+#total {
+	margin:30px 0 30px 0;
+	font-size: 18px;
+}
+
+#agreement {
+	margin:30px 0 30px 0;
+}
+
+#goPay {
+	display:block;
+	width:100%;
+	margin-top:20px;
+	padding:20px 0 20px 0;
+	font-size:20px;
+	font-weight:bold;
+}
+
+.bold {
+	font-weight:bold;
+}
+

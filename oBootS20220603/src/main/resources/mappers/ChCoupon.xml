@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oracle.oBootS20220603.ChCouponMapper">
+	
+	<select id="chCoupMasListAll" parameterType="CouponMaster" resultType="CouponMaster">
+		SELECT * FROM couponmaster
+	</select>
+	
+	<select id="chCoupMasDetail" parameterType="int" resultType="CouponMaster">
+		SELECT * FROM couponmaster WHERE coupno = #{coupno}
+	</select>
+
+	<update id="chCoupMasUpdate" parameterType="CouponMaster">
+		UPDATE couponmaster set coup_name=#{coup_name},
+								coup_type=#{coup_type},
+								coup_dc_rate=#{coup_dc_rate},
+								coup_dc_price=#{coup_dc_price},
+								coup_req_price=#{coup_req_price},
+								coup_expdate=#{coup_expdate}
+		WHERE coupno = #{coupno}
+	</update>
+	
+	<insert id="chCoupMasInsert">
+		INSERT INTO couponmaster values(coupno_seq.nextval, #{coup_name}, #{coup_type}, #{coup_dc_rate},
+										#{coup_dc_price}, #{coup_req_price}, #{coup_expdate})
+	
+	</insert>
+	
+	<delete id = "chCoupMasDelete" parameterType="int">
+		DELETE FROM couponmaster where coupno = #{coupno}
+	
+	</delete>
+	
+	<select id="chUserCoupList" parameterType="String" resultType="Coupon">
+		SELECT * 
+		FROM coupon c, couponmaster cm 
+		WHERE c.coupno = cm.coupno 
+		and c.id = #{id} 
+		and c.coup_status = 1
+		order by c.coup_end asc
+	</select>
+</mapper>

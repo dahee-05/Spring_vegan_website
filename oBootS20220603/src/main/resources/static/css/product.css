@@ -1,0 +1,295 @@
+@charset "UTF-8";
+
+/* 상품 리스트 css */
+
+.prod_wrap {
+	position: relative;
+	width: 100%;
+	margin: 30px 0;
+}
+.prod_wrap ul {
+	position: relative;
+}
+.prod_list {
+	position:relative;
+	float: left;
+	width: calc(100% / 4 - 23px);
+	margin-right: 30px;
+	margin-bottom: 80px;	
+}
+.prod_list:nth-child(4n) {
+	margin-right:0;    
+}
+.prod_th_img {
+	width: 100%;
+	/* min-height: 319px; */
+	min-height: 346.25px;
+	background-color: none;
+	margin-bottom: 10px;
+}
+.prod_th_img img {
+	width: 100%;
+	object-fit: cover;
+	height: 346.25px;
+}
+.brand_name {
+	color: gray;
+	font-size: 12px;
+}
+.prod_name {
+	font-weight: bold;
+	height: 40px;
+	margin: 10px 0;
+	line-height: 1.2em;
+}
+.price {
+	position: relative;
+	
+}
+.price span:first-child {
+	color: orange;
+	font-weight: bold; 
+}
+.price span:nth-child(2) {
+	font-weight: bold; 
+}
+.price span:nth-child(3) {
+	color: gray;
+	font-size: 12px;
+	text-decoration: line-through;
+}
+.price span:nth-child(4) { /* 품절 */
+	border: 2px solid #ff5151;
+	color: #ff5151;
+	font-size: 14px;
+	font-weight: bold;
+	padding: 2px 6px;
+}
+.like {
+	position: absolute;
+	bottom: -4px;
+	right: 0;
+	z-index: 10;	/* 우선순위 : 숫자가 높을수록 더 앞에서 보여준다 */
+	
+}
+.like button {
+	width: 24px;
+	height: 24px;
+	border: 0;
+	background: url("../images/icons/heart_inactive.svg") no-repeat;
+	cursor: pointer;
+}
+.like.active button, .like button:hover {
+	background: url("../images/icons/heart_active.svg") no-repeat;
+}
+
+
+
+
+
+
+/* 상품 뷰 css */
+
+/* 상품 뷰 > 상단 정보 */
+.prod_main_img {
+	float: left;
+	width: 62%;
+}
+.prod_main_img img {
+	width: 335px;
+	height: 502px;
+	position: relative;
+	margin-right: 10px; 
+	
+}
+.prod_info_wrap {
+	position: relative;
+	float: right;
+	width:38%;
+	padding-left: 20px;
+	/* margin-left:0.5%; */
+}
+.prod_view_name p:nth-child(1) {
+	color: gray;
+	font-size: 14px;
+}
+.prod_view_name p:nth-child(2) {
+	font-weight: bold;
+	margin: 10px 0;
+	line-height: 1.2em;
+	font-size: 22px;
+}
+.prod_view_price {
+	position: relative;
+	margin: 30px 0;
+	
+}
+.prod_view_price span:first-child {
+	color: orange;
+	font-weight: bold; 
+	font-size: 20px;
+}
+.prod_view_price span:nth-child(2) {
+	font-weight: bold; 
+	font-size: 20px;
+}
+.prod_view_price span:nth-child(3) {
+	color: gray;
+	font-size: 14px;
+	text-decoration: line-through;
+}
+.prod_view_price span:nth-child(4) { /* 품절 */
+   border: 2px solid #ff5151;
+   color: #ff5151;
+   font-size: 14px;
+   font-weight: bold;
+   padding: 2px 6px;
+}
+.prod_count_wrap {
+	height: 38px;
+	border-bottom: 1px solid #5F8350;
+}
+.txt_line { /* 제목 텍스트 한 줄 초과 시 말줄임표(...) 표기 */
+   width: 340px;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+   display: inline-block;
+   position: relative;
+}
+.prod_count {
+	position: relative;
+	float: right;
+	border: 1px solid #dddddd;
+	padding: 2px;
+	bottom: 6px;
+}
+.prod_count input {
+	width: 25px;
+	background: none;
+	border: 0;
+	font-size: 20px;
+	color: #999999;
+	cursor: pointer;
+}
+.prod_count span {
+	display: inline-block;
+	margin: 4px;
+}
+.total {
+	margin-top: 20px;
+	text-align: right;
+	font-size: 20px;
+	font-weight: bold;
+}
+
+.prod_view_btn > * { /* 높이 가운데 맞추기 공식 */
+	display: inline-block;
+	vertical-align: middle; 
+}
+
+.prod_view_btn button {
+	height: 50px;
+	border: 1px solid #5F8350;
+	border-radius: 100px;
+	background: none;
+	padding: 10px 36px;
+	cursor: pointer;
+	margin: 30px 0;
+}
+.heart { /* 위시리스트 담기  */
+	width: 50px;
+	padding: 10px 10px;
+	height: 50px;
+	border: 1px solid #5F8350;
+	border-radius: 100px;
+	background: none;
+	cursor: pointer;
+	margin: 30px 0;
+	vertical-align: middle;
+	text-align: center;
+}
+/* .prod_view_btn button:nth-child(1) { 위시리스트 담기 
+	background: url("../images/icons/heart_inactive.svg") no-repeat center;
+	width: 50px;
+	padding: 10px 10px;
+}
+.prod_view_btn.active button:nth-child(1), .prod_view_btn button:nth-child(1):hover {
+	background: url("../images/icons/heart_active.svg") no-repeat center;
+} */
+
+.prod_view_btn button:nth-child(3) { /* 장바구니 담기  */
+	margin: 0 10px;
+}
+.prod_view_btn button:nth-child(4) { /* 바로 구매하기  */
+	background-color: #5f8350;
+	color: white;
+	height: 50px;
+	border: 1px solid #5F8350;
+	border-radius: 100px;
+	background: none;
+	padding: 10px 40px;
+	cursor: pointer;
+	margin: 30px 0;
+}
+
+
+/* 상품 뷰 > 하단 상세 설명 */
+.prod_contents_wrap {   /* 탭 포함 상세설명 너비값 조정. 여길 주석처리하고 바로 아래 css 주석처리를 해제하면 컨텐츠 영역 1200px이 됨 */
+   width:70%;
+   margin:50px auto;
+}
+
+.tap {
+   width:100%;
+   height: 54px;
+   margin: 40px 0;
+   /* width:70%; */         /* 위 주석에서 말한 css 부분이 여기랑 */
+   /* margin:50px auto; */   /* 여기 */
+}
+
+.tap > div { 
+	display: inline-block;
+	vertical-align: middle; 
+	height: 54px;
+	line-height:54px;
+	width: 49.5%;
+	
+}
+
+.tap button {
+	width: 100%;
+	height:100%;
+	border-bottom: 2px solid #dddddd;
+	
+}
+.tap.active button:nth-child(1), .tap button:nth-child(1):hover, .tap.active button:nth-child(2), .tap button:nth-child(2):hover {
+	width: 100%;
+	border-bottom: 2px solid #5F8350;
+	font-weight: bold;
+	color: #5F8350;
+}
+
+/* 탭이 선택된 상태 */
+.tap .on button {
+	border-bottom: 2px solid #5F8350;
+	font-weight: bold;
+	color: #5F8350;
+	background-color: #F1F4EF;
+}
+
+.view .on{
+	display: block;
+}
+
+.view > div {
+	display: none;
+}
+
+.rv_id{
+	font-size: 20px;
+	font-weight: bold;
+}
+.rv_total{
+	margin: 30px;
+}

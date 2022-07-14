@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oracle.oBootS20220603.CouponMapper">
+
+	<select id="HKCouponSelectAll" parameterType="String" resultType="Coupon">
+		select c.*, cm.coup_name, cm.coup_type, cm.coup_dc_rate, cm.coup_dc_price, cm.coup_req_price
+		from coupon c, couponmaster cm
+		where c.coupno = cm.coupno
+		and c.id = #{id}
+		and c.coup_status = 1
+		order by c.coup_end asc
+	</select>
+
+	<update id="HKUpdateCoupSts" parameterType="Payment">
+		<if test="coupno != 0">
+			update coupon set coup_status = 2 where id=#{id} and coupno=#{coupno}
+		</if>
+	</update>
+	
+	<select id="HKCoupGetChk" parameterType="Coupon" resultType="int">
+		select count(*) from coupon where id=#{id} and coupno=#{coupno}
+	</select>
+	
+</mapper>

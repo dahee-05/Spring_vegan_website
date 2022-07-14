@@ -1,0 +1,87 @@
+@charset "UTF-8";
+
+#clearfix {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+/* 상품 리스트 css */
+
+.prod_wrap {
+	position: relative;
+	width: 100%;
+	margin: 30px 0;
+}
+.prod_wrap ul {
+	position: relative;
+}
+.prod_wrap > li {
+	position:relative;
+	float: left;
+	width: 226px;
+	margin-left: 12px;
+	margin-bottom: 80px;	
+}
+.prod_wrap > li:nth-child(4n+1) {
+	margin-left:0;    
+}
+.prod_list {
+	width:226px;
+}
+
+.prod_th_img {
+	width: 226px;
+	min-height: 282.5px;
+	background-color: gray;
+	margin-bottom: 10px;
+}
+.prod_th_img img {
+	width: 100%;
+	object-fit: cover;
+}
+.brand_name {
+	color: gray;
+	font-size: 12px;
+}
+.prod_name {
+	font-weight: bold;
+	height: 34px;
+	margin: 10px 0;
+	line-height: 1.2em;
+	font-size: 14px;
+}
+.price {
+	position: relative;
+	
+}
+.price span:first-child {
+	color: orange;
+	font-weight: bold; 
+}
+.price span:nth-child(2) {
+	font-weight: bold; 
+}
+.price span:nth-child(3) {
+	color: gray;
+	font-size: 12px;
+	text-decoration: line-through;
+}
+.like {
+	position: absolute;
+	bottom: -4px;
+	right: 0;
+	z-index: 10;	/* 우선순위 : 숫자가 높을수록 더 앞에서 보여준다 */
+	
+}
+.like button {
+	width: 24px;
+	height: 24px;
+	border: 0;
+	background: url("../images/icons/heart_inactive.svg") no-repeat;
+	cursor: pointer;
+}
+.like.active button {
+	background: url("../images/icons/heart_active.svg") no-repeat;
+}
+
+

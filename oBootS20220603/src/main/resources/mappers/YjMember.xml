@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.oracle.oBootS20220603.MemberMapper">
+
+	<select id="memCnt" parameterType="java.lang.String" resultType="int">
+		select count(*) from member where id=#{id} and pw=#{pw}
+	</select>
+	
+	<select id="YjMemberTotal"  resultType="int">
+		select count(*) from member 
+	</select>
+	
+	<select id="yjMemberList" parameterType="Member" resultType="Member">
+		select *
+		from (
+		            select rownum rn, a.*
+		            from (select * from member order by id) a
+		        )
+		where rn between #{start} and #{end}
+	</select>
+	
+	<select id="yjLogin" parameterType="Member" resultType="Member">
+		select * 
+		from member
+		where id=#{id} and pw=#{pw}
+	
+	</select>
+	
+	<update id="yjMilEdit" parameterType="Member">
+		update member set mileage=#{mileage}
+		where id=#{id}
+		
+	</update>
+	
+	<select id="yjIdCheck" parameterType="Member" resultType="int">
+		select count(id) from member where id=#{id}
+	
+	
+	</select>
+	
+		<select id="yjIdFind" parameterType="Member" resultType="Member">
+		select * 
+		from member
+		where id=#{id}
+	
+	</select>
+	
+	<update id="yjPwChange" parameterType="Member" >
+		update member set pw=#{pw} where id=#{id}
+	</update>
+
+	<insert id="yjInsertUser" parameterType="Member">
+		insert into member values(#{id}, #{pw}, #{name}, #{birth}, #{email}, #{tel}, 1, sysdate, 0, #{post_code}, #{address}, #{det_address}, 0, null, null, null, null)
+	
+	</insert>
+
+</mapper>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oracle.oBootS20220603.ChSearchMapper">
+	
+	<select id="chSearchProdList" parameterType="String" resultType="Product">
+		SELECT *
+		FROM (select rownum rn, a.*
+      		  from (select p.*, e.dc_rate, (p.prod_price * ((100-NVL(e.dc_rate, 0))/100)) sale_price
+              		from product p, evt_product ep, event e
+            		where p.prodno = ep.prodno(+) and ep.evt_no = e.evt_no(+)
+            		order by p.prodno desc) a)
+              WHERE prod_name like '%'||#{search}||'%'
+              or brand_name like '%'||#{search}||'%'
+	</select>
+</mapper>

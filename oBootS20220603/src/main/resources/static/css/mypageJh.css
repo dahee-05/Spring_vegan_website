@@ -1,0 +1,50 @@
+@charset "UTF-8";
+.contents_wrap{
+	width: 600px;
+	margin-left: 40px;
+}
+.selbox{
+	padding: 50px;
+    width: 700px;
+	
+}
+.selbox tr{
+	text-align: center;
+}
+.numb{
+	font-size: 1em;
+}
+.numb td{
+	color: green;
+	font-size: 1.5em;
+    padding-bottom: 15px;
+    
+}
+.sts{
+	font-weight: bold;
+	font-size: 1em;
+	width: 150px;
+}
+.coupbox{
+	float: left;
+	padding: 50px;
+    padding-left: 150px;
+    padding-right: 120px;
+}
+.coupbox h3{
+    padding-bottom: 10px;
+}
+.milebox{
+	float: left;
+	padding: 50px;
+    padding-right: 70px;
+	
+}
+.milebox h3{
+	padding-bottom: 10px;
+}
+
+.span{
+	color: green;
+	font-weight: bold;
+}

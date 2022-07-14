@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oracle.oBootS20220603.PaymentDetailMapper">
+	
+	<insert id="HKInsertPaymentDetail" parameterType="PaymentDetail">
+		insert into payment_detail values(#{payno}, #{prodno}, #{buy_qty}, #{dc_rate}, #{dc_price}, 0)
+	</insert>
+	
+	<select id="HKSelectLastPaymentDetail" parameterType="Payment" resultType="PaymentDetail">
+		select * from payment_detail where payno=#{payno}
+	</select>
+	
+</mapper>

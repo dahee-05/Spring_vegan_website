@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="com.oracle.oBootS20220603.ReviewMapper">
+	<select id="yjReviewTotal"  resultType="int">
+		select count(*) from review where re_step=0
+	</select>
+	
+	<select id="yjReviewListAll" parameterType="Review" resultType="Review">
+		select *
+		from (
+				select rownum rn, a.* 
+				from(select  rvno, prodno, writer_id, rv_content, to_char(rv_date,'yyyy/mm/dd') rv_date, ref, re_step, re_level, rv_stars, rv_img  from review  order by rvno ) a
+				where re_step=0 )
+		where rn between #{start} and #{end}
+		
+	</select>
+
+	<select id="yjReviewSelOne" parameterType="int" resultType="Review">
+		
+		select * 
+		from review r, product p
+		where r.prodno=p.prodno and rvno=#{rvno}
+		
+	
+	</select>
+	
+	<insert id="insertReview" parameterType="Review">
+		insert into review values(rvno_seq.nextval, #{prodno}, 'admin123', #{rv_content},
+								sysdate, #{rvno}, #{re_step}+1, #{re_level}+1,null, null)
+	</insert>
+	
+	
+	<select id="yjReviewReply" parameterType="Review" resultType="Review">
+		SELECT
+			level re_level,
+			ref, 
+			rvno,
+			writer_id, rv_content, rv_date
+			
+			FROM
+				review
+				START WITH ref = #{rvno} 
+				CONNECT BY ref = PRIOR rvno 
+				ORDER SIBLINGS BY rvno 
+	</select>
+	
+	<insert id="uReviewWrite" parameterType="Review">
+		insert into review values(
+								rvno_seq.nextval, 
+								#{prodno}, 
+								#{writer_id}, 
+								#{rv_content},
+								to_date(sysdate, 'YYYY/MM/DD'),
+								null, 
+								0, 
+								0, 
+								#{rv_stars},
+								#{rv_img}
+								)
+	</insert>
+		
+	<update id="yjReviewUpdateU" parameterType="PaymentDetail">
+		update payment_detail 
+		set rv_status=1
+		where payno=#{payno} and prodno=#{prodno}
+	
+	</update>
+
+</mapper>

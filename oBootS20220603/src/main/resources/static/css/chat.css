@@ -1,0 +1,46 @@
+@charset "UTF-8";
+
+/* 채팅 */
+.btn {
+	position: fixed;
+	bottom: 50px;
+	right: 50px;
+	width: 200px;
+	height: 50px;
+	line-height: 50px;
+	text-align: center;
+	color: #fff;
+	background: blue;
+	border-radius: 20px;
+	cursor: pointer;
+}
+
+.aside {
+	position: fixed;
+	right: 0;
+	bottom: 100px;
+	visibility: hidden;
+	opacity: 0;
+	width: 500px;
+	min-height: 400px;
+	border-radius: 10px;
+	background: #ccc;
+	transform: translateY(100%);
+	transition: all 0.5s;
+}
+
+.aside.on {
+	visibility: visible;
+	opacity: 1;
+	transition: 0.5s;
+	transform: translateY(0);
+}
+
+.aside .close_btn {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	width: 40px;
+	height: 40px;
+	background: red;
+}

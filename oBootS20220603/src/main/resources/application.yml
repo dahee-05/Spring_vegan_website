@@ -1,0 +1,54 @@
+# http port set
+server:
+  port: 8380
+
+spring:
+  # File Size
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+  
+  # Oracle Connect
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521/xe
+    username: S20220603
+    password: tiger
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+
+  # gmail Transfer
+  # tls = 통신 암호화
+  # port = 구글이 보내는 port
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: 구글 이메일
+    password: 구글 비밀번호
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls.enable: true  
+
+  # ORM JPA
+  jpa:
+    hibernate:
+      ddl-auto: none  #  create
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+ 
+  #view resolver(Templete ->JSP Use)
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+ 
+# Mybatis 
+mybatis:
+  # dto Location
+  # type-aliases-package: com.oracle.oBootMybatis01.model
+  # xml Location
+  config-location: classpath:configuration.xml
+  mapper-locations: classpath:mappers/*.xml    

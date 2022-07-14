@@ -1,0 +1,37 @@
+@charset "UTF-8";
+.title{
+    padding-top: 50px;
+    color: green;
+    text-align: center;
+}
+
+.subtitle{
+	text-align: center;
+}
+
+#vegimg{
+	text-align: center;
+}
+
+.subsinfobox{
+	text-align: center;
+}
+
+#subssubmit{
+    margin-top: 10px;
+    height: 30px;
+    width: 50px;
+    background-color: white;
+    border: 1px solid #5F8350;
+    border-radius: 12px;
+    color: green;
+}
+
+#subssubmit:hover{
+	background-color: green;
+	color: white;
+	font-weight: bold;
+}
+#accinput{
+	width: 204px;
+}

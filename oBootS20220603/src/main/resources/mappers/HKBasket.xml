@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oracle.oBootS20220603.BasketMapper">
+	
+	<select id="HKBasketSelectAll" parameterType="String" resultType="Basket">
+		select * from basket where id=#{id}
+	</select>
+	
+	<delete id="HKDeletePurchasedItem" parameterType="PaymentDetail">
+		delete from basket where id=#{id} and prodno=#{prodno}
+	</delete>
+	
+	<select id="HKCountItems" parameterType="String" resultType="int">
+		select count(*) from basket where id=#{id}
+	</select>
+	
+</mapper>

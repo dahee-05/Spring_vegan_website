@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oracle.oBootS20220603.ProductMapper">
+	
+	<select id="dhProdTotal" resultType="int">
+		select count(*) from product
+	</select>
+
+	<select id="dhCateTotal" parameterType="int" resultType="int">
+		select count(*) from product where category=#{cgnum}
+	</select>
+	
+	<select id="dhProdSelect" resultType="Product">
+		select *
+		from (select rownum rn, a.*
+      		  from (select p.*, e.dc_rate, (p.prod_price * ((100-NVL(e.dc_rate, 0))/100)) sale_price
+              		from product p, evt_product ep, event e
+            		where p.prodno = ep.prodno(+) and ep.evt_no = e.evt_no(+)
+            		order by p.prodno desc) a)
+	</select>
+	
+	<select id="dhCateProdSelect" parameterType="int" resultType="Product">
+		select *
+		from (select rownum rn, a.*
+      		  from (select p.*, e.dc_rate, (p.prod_price * ((100-NVL(e.dc_rate, 0))/100)) sale_price
+              		from product p, evt_product ep, event e
+            		where p.prodno = ep.prodno(+) and ep.evt_no = e.evt_no(+)
+            		order by p.prodno desc) a)
+              where category = #{cgnum}
+	</select>
+	
+	<!-- ================================================================================  -->
+	<!-- 상품 상세페이지  -->
+	<select id="dhProdno" parameterType="Product" resultType="Product">
+		<!-- select * from product where prodno=#{prodno} -->
+		select *
+		from (select rownum rn, a.*
+      		  from (select p.*, e.dc_rate, (p.prod_price * ((100-NVL(e.dc_rate, 0))/100)) sale_price
+              		from product p, evt_product ep, event e
+            		where p.prodno = ep.prodno(+) and ep.evt_no = e.evt_no(+)
+            		order by p.prodno desc) a)
+              where prodno = #{prodno}
+	</select>
+	
+	  <!-- 장바구니 담기 -->	
+<!-- 	 <insert id="insertBasket" parameterType="Basket" > 
+		insert into Basket values(#{prodno},#{id},#{bas_qty})
+	</insert>  -->
+	
+	 <update id="dhinsertBasket" parameterType="Basket" >
+		merge
+		into basket b
+		using dual
+		on (b.prodno=#{prodno} and b.id=#{id})
+		when matched then
+		    update 
+		    set b.bas_qty= b.bas_qty + #{bas_qty}
+		when not matched then 
+		    insert (b.prodno, b.id, b.bas_qty)
+		    values (#{prodno},#{id},#{bas_qty})
+	</update> 
+	 
+	 
+	<!-- 장바구니  리스트-->
+	<select id="dhshCartList" parameterType="Product" resultType="product">
+	 	select *
+		from (select rownum rn, a.*
+     		  from  (SELECT p.prodno,  p.th_img, p.brand_name, p.prod_name, b.bas_qty, b.id, (b.bas_qty * p.prod_price) sale_price 
+                     FROM product p, basket b
+                     WHERE p.prodno=b.prodno)a)
+        where id=#{id}             
+	</select>
+	
+	<!-- 장바구니 삭제버튼  -->
+	<delete id="dhcartDel" parameterType="Product">
+		delete from Basket where prodno =#{prodno}
+	</delete>
+	
+	
+	<!-- 상세페이지->회원존재확인 -->
+ 	<select id="dhshLMember" parameterType="Product" resultType="int">
+		select count(*)
+		from basket
+		where id=#{id}
+	</select> 
+	
+	<!-- ================================================================================  -->
+	
+	
+	<!-- 위시리스트 시작 -->
+	<!-- id prodno 모두가 같은 품목이 있는지 -->
+	<select id="findProdViewHeart" parameterType="Wishlist" resultType="int">
+		SELECT count(*) 
+		FROM wishlist
+		WHERE id=#{id} AND prodno=#{prodno}
+	</select>
+	
+	<!-- 위시리스트 하트(빈->채) 바뀜 -->
+	<select id="WishchgEmpToFill" parameterType="Wishlist" resultType="int">
+		INSERT INTO wishlist(prodno, id)
+		VALUES (#{prodno}, #{id})
+	</select>
+	
+	<!-- 위시리스트 하트(채->빈) 바뀜 -->
+	<select id="WishchgFillToEmpty" parameterType="Wishlist" resultType="int">
+		DELETE FROM wishlist
+		WHERE id=#{id} AND prodno=#{prodno}
+	</select>
+	
+	<!-- 위시리스트 뷰단  -->
+	<select id="idWishListAll" parameterType="java.lang.String" resultType="Product">
+		SELECT p.*, e.dc_rate, (p.prod_price * ((100-NVL(e.dc_rate, 0))/100)) sale_price
+		FROM wishlist w, product p, evt_product ep, event e
+		WHERE p.prodno = ep.prodno(+) AND ep.evt_no = e.evt_no(+) AND w.id=#{id}  AND p.prodno=w.prodno 
+	</select>
+	
+	<!-- 위시리스트 끝 -->
+	
+	
+	
+	
+	<!-- 어드민 시작                                                                                 -->
+	<!-- 어드민    -->
+	
+	
+	<!-- 어드민 상품리스트  -->
+	<select id="dhAdminProdSelect" parameterType="Product" resultType="Product">
+		select *
+		from (select rownum rn, a.*
+      		  from (select p.*, e.dc_rate, (p.prod_price * ((100-NVL(e.dc_rate, 0))/100)) sale_price
+              		from product p, evt_product ep, event e
+            		where p.prodno = ep.prodno(+) and ep.evt_no = e.evt_no(+)
+            		order by p.prodno desc) a) 
+        WHERE rn BETWEEN #{start} AND #{end}
+	</select>
+	
+	<!-- 전체 상품 개수 -->
+	<select id="dhtotalCSelect" resultType="int" >
+		select count(*) from product
+	</select>
+	
+	<!-- 판매중 상품 개수 -->
+	<select id="dhtotalSSelect" resultType="int">  
+		select count(*) from product where prod_salests ='1'
+	</select>
+	
+	<!-- 품절된 상품 개수 -->
+	<select id="dhtotalSOSelect" resultType="int">  
+		select count(*) from product where prod_salests ='2'
+	</select>
+
+	<!-- 판매중지 상품 개수 -->
+	<select id="dhtotalSTSelect" resultType="int">  
+		select count(*) from product where prod_salests ='0'
+	</select>
+	  
+	  <!-- 어드민 상품조회_상품명, 상품번호 --> 
+	  <select id="dhAdminKeyword" parameterType="Product" resultType="Product">
+		select *
+		from (	select rownum rn, a.*
+				from (select * 
+					  from product
+					 <choose>
+					 	<when test="search==0">
+					 		where (prod_name like '%' || #{keyword2} || '%'
+					 		    AND   prodno like '%' || #{keyword1} || '%')
+					 	</when>
+					 	<when test="search==1">
+					 		where (prod_name like '%' || #{keyword2} || '%'
+					 			 AND  prodno like '%' || #{keyword1} || '%' )
+					 		AND category='1'
+					 	</when>
+					 	<when test="search==2">
+					 		where (prod_name like '%' || #{keyword2} || '%'
+					 			 AND  prodno like '%' || #{keyword1} || '%' )
+					 		AND category='2'
+					 	</when>
+					 	<when test="search==3">
+					 		where (prod_name like '%' || #{keyword2} || '%'
+					 			 AND  prodno like '%' || #{keyword1} || '%' )
+					 		AND category='3'
+					 	</when>
+					 	<when test="search==4">
+					 		where (prod_name like '%' || #{keyword2} || '%'
+					 			 AND  prodno like '%' || #{keyword1} || '%' )
+					 		AND category='4'
+				 	</when>
+				 	<otherwise>
+							WHERE ( prod_name  like '%'
+								   AND prodno  like '%'	)
+					</otherwise> 
+				 </choose>
+			    )a )
+	where rn between #{start} AND #{end}	
+	</select>   
+	
+
+	<!-- 상품 조회 키워드 토탈 -->
+	<select id="dhAdminKeywordTotal"  parameterType="Product" resultType="int">
+		select count(*) from product
+			<choose>
+				 	<when test="search==0">
+				 		where (prod_name like '%' || #{keyword2} || '%'
+				 		    AND   prodno like '%' || #{keyword1} || '%')
+				 	</when>
+				 	<when test="search==1">
+				 		where (prod_name like '%' || #{keyword2} || '%'
+				 			 AND  prodno like '%' || #{keyword1} || '%' )
+				 		AND category='1'
+				 	</when>
+				 	<when test="search==2">
+				 		where (prod_name like '%' || #{keyword2} || '%'
+				 			 AND  prodno like '%' || #{keyword1} || '%' )
+				 		AND category='2'
+				 	</when>
+				 	<when test="search==3">
+				 		where (prod_name like '%' || #{keyword2} || '%'
+				 			 AND  prodno like '%' || #{keyword1} || '%' )
+				 		AND category='3'
+				 	</when>
+				 	<when test="search==4">
+				 		where (prod_name like '%' || #{keyword2} || '%'
+				 			 AND  prodno like '%' || #{keyword1} || '%' )
+				 		AND category='4'
+			 		</when>
+			</choose>
+
+	</select> 
+ 
+	<!-- 어드민 상품 상세페이지 뷰 -->
+	<select id="dhProdDetail" parameterType="int" resultType="Product">
+		select p.*, NVL(e.dc_rate, 0) dc_rate, (p.prod_price * ((100-NVL(e.dc_rate, 0))/100)) sale_price
+		from product p, evt_product ep, event e
+		where p.prodno = ep.prodno(+) and ep.evt_no = e.evt_no(+) and p.prodno = #{prodno}
+	</select>
+	
+	<!-- 어드민 상품 삭제 -->
+ 	<delete id="dhprodnoDelete" parameterType="int" >
+ 		delete from product where prodno=#{prodno}
+ 	</delete>
+
+ 	<delete id="dhDelete" parameterType="int" >
+		delete from product where prodno=#{prodno}
+	</delete>
+
+	<!-- 어드민 상품 등록 insert -->
+	<insert id="dhProdInsert" parameterType="Product">
+		insert into product 
+		(
+			  prodno
+			, category
+			, brand_name
+			, prod_name
+			, prod_price
+			, stock
+			, sale_qty
+			, prod_reg
+			, prod_poststs
+			, prod_salests
+			, th_img
+			, main_img1
+			, main_img2
+			, prod_info
+		)
+		<choose>
+			<when test="#{prod_poststs == 1}">
+				values(
+					  prodno_seq.nextval
+					, #{category}
+					, #{brand_name}
+					, #{prod_name}
+					, #{prod_price}
+					, #{stock}
+					, #{sale_qty}
+					, TO_DATE(SYSDATE, 'YYYY/MM/DD')
+					, #{prod_poststs}
+					, 1
+					, #{th_img}
+					, #{main_img1}
+					, #{main_img2}
+					, #{prod_info}
+				)
+			</when>
+			<when test="#{prod_poststs == 0}">
+				values(
+					  prodno_seq.nextval
+					, #{category}
+					, #{brand_name}
+					, #{prod_name}
+					, #{prod_price}
+					, #{stock}
+					, #{sale_qty}
+					, TO_DATE(SYSDATE, 'YYYY/MM/DD')
+					, #{prod_poststs}
+					, 0
+					, #{th_img}
+					, #{main_img1}
+					, #{main_img2}
+					, #{prod_info}
+				)
+			</when>
+		</choose>
+	</insert>
+	
+	<!-- ///////////////////////게시 비게시//////////////////////////////// -->
+	<!-- 게시에서 비게시 아작스  -->
+	<select id="dhChgstsyn" parameterType="int">
+		UPDATE product
+		SET prod_poststs=0, prod_salests=0
+		WHERE prodno=#{prodno}
+	</select>
+	
+		<!-- 비게시에서 게시 아작스  -->
+	<select id="dhChgstsny" parameterType="int">
+		UPDATE product
+		SET prod_poststs=1, prod_salests=1
+		WHERE prodno=#{prodno}
+	</select>
+	<!-- ///////////////////////게시 비게시//////////////////////////////// -->
+
+
+	<!-- 어드민 상품 수정 -->
+ 	<update id="dhprodUpdate" parameterType="Product">
+		update product set 
+         category=#{category},
+          brand_name=#{brand_name},
+          prod_name=#{prod_name},
+          prod_price=#{prod_price},
+          stock =#{stock},
+          sale_qty=#{sale_qty},    
+          prod_reg=TO_DATE(SYSDATE, 'YY/MM/DD'),
+          prod_poststs=#{prod_poststs},
+          prod_salests=#{prod_salests},
+          th_img=#{th_img},
+          main_img1=#{main_img1},
+          main_img2=#{main_img2},
+          prod_info=#{prod_info} 
+      where prodno=#{prodno}
+	</update> 
+	
+	<select id="dhProd_rv" parameterType="int" resultType="review">
+		select r.*
+		from review r
+		where prodno=#{prodno}
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+</mapper>

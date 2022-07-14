@@ -1,0 +1,79 @@
+@charset "UTF-8";
+.thm_img{
+	float: left;
+	padding-bottom: 5px;
+	height: 200px;
+	width: 200px;
+}
+.thm_rimg{
+	height: 100%;
+	width: 100%;
+	object-fit: contain;
+}
+
+.prod_info{
+	float: left;
+}
+.infobox{
+    padding-top: 30px;
+	float: left;
+	width: 940px;
+}
+.status{
+	padding-top: 20px;
+    padding-bottom: 20px;
+	clear: both;
+}
+.listTitle{
+	font-weight: bold;
+	font-size: 1em;
+}
+.listQty{
+	padding-top: 10px;
+	padding-bottom: 5px;
+}
+
+.listMon {
+	font-weight: bold;
+}
+
+.paymentbox{
+    padding-top: 50px;
+	clear: both;
+}
+
+.paymentbox li{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.paymentinfo{
+	float: left;
+}
+.real_amount{
+	padding-top: 30px;
+	padding-right: 30px;
+	font-size: 1.2em;
+	float: right;
+}
+
+.delivinfo{
+    padding-top: 50px;
+	clear:both;
+}
+
+.delivinfo li{
+   	padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.odnum{
+	font-weight: bold;
+	font-size: 1.3em;
+}
+
+.oddate{
+	font-weight: bold;
+	font-size: 1.3em;	
+	padding-left: 300px;
+}

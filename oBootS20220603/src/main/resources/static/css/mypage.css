@@ -1,0 +1,77 @@
+@charset "UTF-8";
+
+.sectionmy {
+	width: 940px;
+	height: auto;
+	display: inline;
+	float: right;
+	padding-top: 40px;
+}
+
+mypage{
+	padding-left: 5px;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	align-content: center;
+}
+
+*{
+	margin:0;
+	padding:0;
+	list-style:none;
+	font-family:"malgun gothic";
+	box-sizing:border-box;
+	}
+	
+	
+.clear{
+	clear:both;
+	}
+
+#container{
+    width: 250px;
+    float: left;
+    display: block;
+    padding-top: 46px;	/* 22-06-07 수정 */
+	}
+	
+#content{
+	align-self: center;
+	}
+
+/*v1*/
+#nav-v1{
+	width:170px;
+	text-align:center;
+	}
+	
+.menu-v1{
+	line-height:3;
+	border: 1px solid #D3D3D3;
+	}
+	
+.menu-v1:hover{
+	background-color:#F5F5F5;
+	}
+	
+.menu-v1:hover>a{
+	font-weight:bold;
+	}
+	
+.menu-v1 .submenu{
+	margin-top:7px;
+	background-color:#F5F5F5;
+	display:none;
+}
+
+.menu-v1 .submenu li:hover{
+	background-color:#DCDCDC;
+	color:white;
+	font-weight:bold;
+}
+
+.submenu a{
+	line-height:3;
+	text-decoration:none;
+	color:inherit;
+}

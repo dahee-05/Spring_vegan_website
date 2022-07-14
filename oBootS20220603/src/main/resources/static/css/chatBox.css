@@ -1,0 +1,107 @@
+@charset "UTF-8";
+
+
+
+#container{
+	width: 300px;
+	margin: 0 auto;
+	/* padding: 25px; */
+	background-color: #EFEFEF;
+	/* display:inline-block; */
+	padding:0;
+	position:fixed;
+	bottom:100px;
+	right:50px;
+	border:1px solid black;
+	/* display:none; */
+}
+.container h1{
+	text-align: left;
+	padding: 5px 5px 5px 15px;
+	color: #FFBB00;
+	margin-bottom: 20px;
+}
+.chating{
+	background-color: #EFEFEF;
+	width:300px;	
+	height: 450px;
+	overflow: auto;
+	border-right:1px solid black;
+	/* border:1px solid #EFEFEF; */
+}
+#chating #chat_header {
+	width:100%;
+	height:40px;	
+	background-color:#8AB758;
+}
+
+#chating span {
+	font-size:14px;
+	height:40px;
+	font-weight:bold;
+	line-height:40px;
+	margin-left:10px;
+}
+
+#chat_header > div {
+	width:20px;
+	height:20px;
+	float:right;
+	margin-top:10px;
+	margin-right:10px;
+	cursor:pointer;
+}
+
+#chat_header > div img {
+	width:20px;
+	height:20px;
+}
+
+
+.chating .me{
+	color: #F6F6F6;
+	text-align: right;
+}
+.chating .others{
+	color: #FFE400;
+	text-align: left;
+}
+input{
+	width: 330px;
+	height: 25px;
+}
+#yourMsg{
+	/* display: none; */
+	width:280px;
+	border:1px solid black;
+	height:40px;
+	
+}
+#yourMsg input{
+	width:280px;
+	padding:4px;
+	height:40px;
+}
+
+
+#yourMsg button {
+	width:25px;
+	height:25px;
+	
+}
+#yourMsg button img {
+	width:25px;
+	height:25px;
+	padding:2px;
+}
+
+.inputTable input {
+	font-size:14px;
+}
+
+#yourNameDel{
+	display: none;
+}
+#yourName {
+	display:none;
+}

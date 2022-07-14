@@ -1,0 +1,61 @@
+@charset "UTF-8";
+
+.clearfix::after {
+	content: "";
+	display: block;
+	clear: both;
+}
+
+.reset_btn {
+	border: none;
+	border-radius: 5px;
+	background: #eeeff2;
+	color: #667080;
+	font-size: 12px;
+	vertical-align: middle;
+	height: 39px;
+	padding: 0px 16px;
+}
+
+.parent {
+	display: table;
+	text-align: center;
+}
+
+.parent_inner {
+	display: table-cell;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.parent_content {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.prod_count {
+	width: 60px;
+	font-size: 13px;
+	text-align: center;
+	vertical-align: middle;
+	float: left;
+	margin: 20px 30px;
+}
+
+.prod_count span:first-child {
+	font-weight: bold;
+}
+
+.prod_count_point {
+	font-size: 20px;
+	font-weight: bold;
+}
+
+.txt_line { /* 제목 텍스트 한 줄 초과 시 말줄임표(...) 표기 */
+	width: 400px;
+	padding: 0 5px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	display: block;
+}
